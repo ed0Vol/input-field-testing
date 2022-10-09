@@ -1,64 +1,84 @@
 import type { NextPage } from 'next'
-import { useState, ChangeEvent } from 'react'
-import Head from 'next/head'
-import validate from '../utils/validate'
+import { useState, ChangeEvent, useEffect } from 'react'
+import { checkType, checkLength } from '../utils/validate'
 import Input from '../component/Input'
 import Button from '../component/Button'
+import texts from '../config/texts'
+import checkSecrets from '../utils/checkSecrets'
+import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import mars from '../styles/mars.gif'
+import Popup from '../component/Popup'
 
 const Home: NextPage = () => {
-  const [valueText, setValueText] = useState('')
-  const [valueNumber, setValueNumber] = useState('')
-
-  const handlerOnSubmit = (e: any) => {
-    e.preventDefault()
-    
-  }
+  const [text, setValueText] = useState({
+    value: '',
+    validType: false,
+    validLength: false
+  })
+  const [number, setValueNumber] = useState({
+    value: '',
+    validType: false,
+    validLength: false
+  })
+  const [popupValue, setPopupValue] = useState('')
 
   const handlerClickText = () => {
-    const valid = validate(valueText, 'text')
-    alert(valid ? 'Это строка' : 'Это не строка')
+    const secrets = checkSecrets(text.value)
+    if (secrets) return setPopupValue(secrets)
 
+    setPopupValue(text.validType ? texts.errorMessage.text.pass : texts.errorMessage.text.failed)
   }
 
   const handlerClickNumber = () => {
-    const valid = validate(valueNumber, 'number')
-    alert(valid ? 'Это число' : 'Это не число')
+    const secrets = checkSecrets(number.value)
+    if (secrets) return setPopupValue(secrets)
+
+    setPopupValue(number.validType ? texts.errorMessage.number.pass : texts.errorMessage.number.failed)
   }
 
   const handlerChangeText = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target?.value || ''
-    setValueText(value)
+    setValueText({ ...text, value: value, validLength: !checkLength(value, 2, 100), validType: !!checkType(value, 'text') })
   }
 
   const handlerChangeNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target?.value || ''
-    setValueNumber(value)
+    setValueNumber({ ...number, value: value, validLength: !checkLength(value, 0, 9), validType: !!checkType(value, 'number') })
   }
 
+  const handleClickPlanet = () => {
+    setPopupValue(texts.secrets.sClick)
+  }
+
+  const handleClosePopup = () => {
+    setPopupValue('')
+  }
+
+  useEffect(() => {
+    setPopupValue(texts.startPage)
+  }, [])
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title></title>
-      </Head>
-
-      <main className={styles.main}>
-        <form onSubmit={handlerOnSubmit}>
-          <div>
-            <Input type='text' onChange={handlerChangeText} placeholder='Введите тект' />
-            <Button type='submit' onClick={handlerClickText}>Проверить строку</Button>
+    <div className={styles.containerWrapper}>
+      {popupValue && <Popup className={styles.popup} onClick={handleClosePopup}>{popupValue}</Popup>}
+      <div className={`${styles.container} ${popupValue && styles.blur}`}>
+        <main className={styles.main}>
+          <div className={styles.inputForm}>
+            <Input type='text' className={styles.input} onChange={handlerChangeText} placeholder={texts.placeholderText} />
+            <Button type='submit' className={styles.button} onClick={handlerClickText} disabled={text.validLength}>{texts.titleBtnText}</Button>
+            {text.validLength && <p className={styles.errorLength}>{texts.textLength.text}</p>}
           </div>
-          <div>
-            <Input type='text' onChange={handlerChangeNumber} placeholder='Введите число' />
-            <Button type='submit' onClick={handlerClickNumber}>Проверить число</Button>
+          <div className={styles.inputForm}>
+            <Input type='text' className={styles.input} onChange={handlerChangeNumber} placeholder={texts.placeholderNumber} />
+            <Button type='submit' className={styles.button} onClick={handlerClickNumber} disabled={number.validLength}>{texts.titleBtnNumber}</Button>
+            {number.validLength && <p className={styles.errorLength}>{texts.textLength.number}</p>}
           </div>
-          <Button type='submit'>Проверить формы</Button>
-        </form>
-      </main>
-
-      <footer className={styles.footer}>
-
-      </footer>
+        </main>
+        <footer className={styles.footer}>
+          <Image src={mars} width={200} height={200} className={`${styles.mars} ${styles.rotation}`} onClick={handleClickPlanet} />
+        </footer>
+      </div>
     </div>
   )
 }

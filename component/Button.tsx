@@ -1,11 +1,11 @@
-import {FC, memo} from 'react'
-import {Button} from '../types/types'
+import { FC, memo } from 'react'
+import { Button } from '../types/types'
 
 
-const Button:FC<Button> = (props) =>  {
-    const {children, type, onClick} = props
+const Button: FC<Button> = (props) => {
+    const { children, type, className, onClick, disabled } = props
     return (
-        <button type={type} onClick={onClick}>{children}</button>
+        <button disabled={disabled} className={className} type={type} onClick={onClick}>{children}</button>
     )
 }
 

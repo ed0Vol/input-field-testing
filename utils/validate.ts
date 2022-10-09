@@ -1,4 +1,4 @@
-const validate = (value: any, type: 'text' | 'number') => {
+export const checkType = (value: any, type: 'text' | 'number') => {
     if (!value) return false
     switch (type) {
         case 'text':
@@ -10,4 +10,6 @@ const validate = (value: any, type: 'text' | 'number') => {
     }
 }
 
-export default validate
+export const checkLength = (value: string, minLength:number, maxLength:number) => {
+    return value.length >= minLength && value.length <= maxLength
+}
