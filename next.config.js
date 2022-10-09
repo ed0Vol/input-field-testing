@@ -7,6 +7,8 @@ const nextConfig = {
     loader: 'akamai',
     path: '',
   },
+  basePath: "/input-field-testing",
+  assetPrefix: "/input-field-testing"
 }
 
 module.exports = nextConfig
