@@ -7,7 +7,6 @@ import texts from '../config/texts'
 import checkSecrets from '../utils/checkSecrets'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import mars from '../styles/mars.gif'
 import Popup from '../component/Popup'
 
 const Home: NextPage = () => {
@@ -76,7 +75,7 @@ const Home: NextPage = () => {
           </div>
         </main>
         <footer className={styles.footer}>
-          <Image src={mars} width={200} height={200} className={`${styles.mars} ${styles.rotation}`} onClick={handleClickPlanet} />
+          <Image src='https://github.com/ed0Vol/input-field-testing/blob/main/styles/mars.gif?raw=true' width={200} height={200} className={`${styles.mars} ${styles.rotation}`} onClick={handleClickPlanet} />
         </footer>
       </div>
     </div>
