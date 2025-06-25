@@ -1,5 +1,5 @@
 export default {
-  placeholderText: 'Введите текcт123',
+  placeholderText: 'Введите текcт',
   titleBtnText: 'Check',
   placeholderNumber: 'Введите число',
   titleBtnNumber: 'Check',
